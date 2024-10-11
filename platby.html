@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nákup VIP členství</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID"></script>
+<style>
+/* Globální nastavení */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212; /* Tmavé pozadí */
+    color: #e0e0e0; /* Světlejší text */
+    line-height: 1.6;
+}
+
+/* Hlavní kontejner */
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #1e1e1e; /* Tmavě šedá */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease;
+}
+
+/* Hlavní nadpis */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #ff4081; /* Růžová barva */
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Tlačítka */
+button {
+    background-color: #00bcd4; /* Cyan */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0097a7; /* Tmavší cyan */
+    transform: translateY(-2px);
+}
+
+/* Formuláře */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"] {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background: #333; /* Tmavě šedé pozadí */
+    color: #e0e0e0; /* Světlejší text */
+    border: 2px solid #ff4081; /* Růžový okraj */
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus {
+    border-color: #e63976; /* Tmavší růžová */
+    outline: none;
+}
+
+/* Profil */
+.profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #1f1f1f; /* Tmavě šedé pozadí */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.profile img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    border: 2px solid #ff4081; /* Růžový okraj */
+}
+
+.profile-info {
+    flex: 1;
+}
+
+/* Chat */
+.chat {
+    background-color: #1e1e1e; /* Tmavě šedé pozadí */
+    border: 1px solid #444; /* Tmavý okraj */
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.chat-message.user {
+    background-color: #ff4081; /* Růžová barva */
+    color: white;
+    text-align: right;
+}
+
+/* Odkazy */
+a {
+    color: #00bcd4; /* Cyan */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #0097a7; /* Tmavší cyan */
+    text-decoration: underline;
+}
+
+/* Animace */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
+
+</head>
+<body>
+<h1>Nákup VIP členství</h1> <p>Cena: 1200 Kč na rok</p>   
+
+
+
+<script src="https://www.paypal.com/sdk/js?client-id=ATwYZClcm-fFopcI8JcmoSF2-851w0ing7pnUDFEJrqbBR6crMkkTKok2MNve80-uHrBkgErwwv8bXf2"></script>
+
+
+    
+    
+    <div id="paypal-button-container"></div>
+    
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '1200.00' // Cena za VIP členství
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert('Děkujeme, ' + details.payer.name.given + '! VIP členství bylo úspěšně zakoupeno.');
+                    
+                    // Zde můžeš přidat kód pro uložení stavu VIP členství do localStorage nebo do databáze
+                    localStorage.setItem('vipMembership', 'active');
+                    // Například můžeš také přidat datum vypršení členství
+                    const expiryDate = new Date();
+                    expiryDate.setFullYear(expiryDate.getFullYear() + 1); // Nastavit na 1 rok
+                    localStorage.setItem('membershipExpiry', expiryDate.toISOString());
+                });
+            },
+            onError: function(err) {
+                console.error(err);
+                alert('Došlo k chybě při zpracování platby.');
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
