@@ -1,0 +1,49 @@
+// script.js
+
+// Funkce pro odeslání zprávy
+function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const messageText = messageInput.value;
+
+    if (messageText.trim() !== '') {
+        const messageContainer = document.getElementById('chatContainer');
+        
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = messageText;
+
+        messageContainer.appendChild(messageElement);
+        messageInput.value = ''; // Vyčistí vstup po odeslání
+
+        // Uložit zprávu do localStorage
+        saveMessage(messageText);
+    }
+}
+
+// Funkce pro uložení zprávy do localStorage
+function saveMessage(message) {
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    messages.push(message);
+    localStorage.setItem('messages', JSON.stringify(messages));
+}
+
+// Načíst zprávy z localStorage
+function loadMessages() {
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    const messageContainer = document.getElementById('chatContainer');
+    
+    messages.forEach(message => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = message;
+        messageContainer.appendChild(messageElement);
+    });
+}
+
+// Inicializace chatu při načtení stránky
+window.onload = function() {
+    loadMessages();
+}
+
+// Přidat událost na odesílací tlačítko
+document.getElementById('sendButton').addEventListener('click', sendMessage);
